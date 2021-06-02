@@ -12,7 +12,7 @@ TOKEN = ''
 
 cmdlist = """
 TGB Command List:
-* tgb hi
+* tgb hi, hello, hey, ciao, yoo, hola, dude, buddy, whats's up 
 * tgb help me
 * tgb council
 * tgb core
@@ -22,7 +22,8 @@ TGB Command List:
 * tgb bio
 * tgb bio: @<user>
 * tgb add bio: <ADD_YOUR_BIO_TEXT>
-* tgb change bio:<ADD_YOUR_BIO_TEXT>   
+* tgb change bio:<ADD_YOUR_BIO_TEXT>  
+* tgb quotes
 """
 
 council = """
@@ -258,6 +259,14 @@ trivia = [
 'Millions of tons of technology are thrown out each year',
 ]
 
+#    THIS IS ADDED
+user_input = ["tgb hello", "tgb hii", "tgb hi", "tgb bot","tgb yo", "tgb yoo", "tgb hey",
+            "tgb hola", "tgb what's up", "tgb dude", "tgb what's up dude", "tgb ciao", "tgb buddy"] 
+
+bot_reply = ["Hello!", "Hii", "CIAO", "Hey Buddy!", "Heya, how's it going?", "Hey, What's up?", "Good to see you",
+             "Great to see you","Glad to see you", "Look who it is!" ,"Nice to see you again", "Hi there", "Long time no see",
+             "Howdy-doody!", "Hiya!", "Howdy, howdy, howdy!", "Yoo!", "Cool dude!","Hola", "Bonjour","What's going on?", "Doing OK", "Everything Alright!"]
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
@@ -271,7 +280,11 @@ async def on_message(message):
         name = str(message.author)
         index = name.index("#")
         await message.channel.send(f'Hey {name[:index]}!')
-
+    
+    msg = message.content.lower()                                    # THIS IS EDITED
+    if any(word in msg for word in user_input): 
+        await message.channel.send(random.choice(bot_reply) + '   {0.author.name}'.format(message))            
+    
     if message.content.lower() == 'tgb help me':
         await message.channel.send('How can I help you?')
 
@@ -306,6 +319,10 @@ async def on_message(message):
 
     if ("tgb change bio: " in message.content.lower()) and (message.content[16] != None):
         await message.channel.send(change_bio(message))
+        
+    if message.content.lower() == "tgb quotes":      # THIS ONE IS ADDDED WHICH WILL RETURN A RANDOM QUOTE FROM AN API
+        quo = quote()
+        await message.channel.send(quo)
     
 async def pyrandmeme():
     pymeme = discord.Embed(title="Tech Meme requested", description="Here you go!", color=0x84d4f4)
@@ -354,6 +371,13 @@ def change_bio(message):
         df.loc[df.user == curr_user, 'bio'] = new_bio
         df.to_csv(r'bio.csv', index=False)
         return 'Bio changed!'
+
+ # THIS WILL RETURN A RANDOM THOUGHT FROM THE API
+def quote():
+    response = requests.get("https://zenquotes.io/api/random")
+    json_data = json.loads(response.text)
+    quo = json_data[0]['q'] + " " + json_data[0]['a']
+    return quo
 
 keep_alive()
 client.run(TOKEN)
