@@ -4,60 +4,22 @@ import time
 from random import randint
 from keep_alive import keep_alive
 import pandas as pd
+import random
+import requests
+import json
 
 client = discord.Client()
 
 # TOKEN removed for security purposes
 TOKEN = ''
 
-cmdlist = """
-TGB Command List:
-* tgb hi, hello, hey, ciao, yoo, hola, dude, buddy, whats's up 
-* tgb help me
-* tgb council
-* tgb core
-* tgb exec
-* tgb trivia
-* tgb meme
-* tgb bio
-* tgb bio: @<user>
-* tgb add bio: <ADD_YOUR_BIO_TEXT>
-* tgb change bio:<ADD_YOUR_BIO_TEXT>  
-* tgb quotes
-"""
+user_input = ["tgb hello", "tgb hii", "tgb hi", "tgb bot","tgb yo", "tgb yoo", "tgb hey","tgb bro",
+            "tgb hola", "tgb what's up", "tgb dude", "tgb what's up dude", "tgb ciao","tgb buddy"]
 
-council = """
-**Council Members:**
-Nishant Gandhi - Chairman
-Sarthak Khandelwal - Vice-Chairman
-Hiteshi Gupta - Treasurer
-"""
-
-heads = """
-**Head Members:**
-Saud Hashmi - Content Head
-Riya Ahuja - Management Head
-Ritika Maheshwari - Marketing Head
-Mihir Dutta - Technical Head
-Samriddhi Kaur - Graphics Head
-Yash Sehgal - Junior Coordinator
-"""
-
-execs = """
-**Executive Members:**
-Mayank Verma
-Jaspreet Singh Saini
-Samarth Sharma
-Aditi Mandlik
-Prateeti mehta jain
-Rajesh Nathani
-Ishika Shahaney
-Raj Soni
-Anushka Jain
-Tanisha Jain
-Aditi Dandawate
-Suchismita Nanda
-"""
+bot_reply = ["Hello!", "Hii", "CIAO", "Hey Buddy!", "Heya, how's it going?", "Hey, What's up?", "Good to see you",
+             "Great to see you","Glad to see you", "Look who it is!" ,"Nice to see you again", "Hi there", "Long time no see",
+             "Howdy-doody!", "Hiya!", "Howdy, howdy, howdy!", "Yoo!", "Cool dude!","Hola", "Bonjour","What's going on?", 
+             "Doing OK", "Everything Alright!"]
 
 trivia = [
 "The Firefox logo isn’t a fox.",
@@ -259,13 +221,11 @@ trivia = [
 'Millions of tons of technology are thrown out each year',
 ]
 
-#    THIS IS ADDED
-user_input = ["tgb hello", "tgb hii", "tgb hi", "tgb bot","tgb yo", "tgb yoo", "tgb hey",
-            "tgb hola", "tgb what's up", "tgb dude", "tgb what's up dude", "tgb ciao", "tgb buddy"] 
-
-bot_reply = ["Hello!", "Hii", "CIAO", "Hey Buddy!", "Heya, how's it going?", "Hey, What's up?", "Good to see you",
-             "Great to see you","Glad to see you", "Look who it is!" ,"Nice to see you again", "Hi there", "Long time no see",
-             "Howdy-doody!", "Hiya!", "Howdy, howdy, howdy!", "Yoo!", "Cool dude!","Hola", "Bonjour","What's going on?", "Doing OK", "Everything Alright!"]
+def quote():
+    response = requests.get("https://zenquotes.io/api/random")
+    json_data = json.loads(response.content)
+    quo = json_data[0]['q'] + " " + json_data[0]['a']
+    return quo
 
 @client.event
 async def on_ready():
@@ -275,36 +235,71 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-
-    if message.content.lower() == 'tgb hi':
-        name = str(message.author)
-        index = name.index("#")
-        await message.channel.send(f'Hey {name[:index]}!')
     
-    msg = message.content.lower()                                    # THIS IS EDITED
-    if any(word in msg for word in user_input): 
-        await message.channel.send(random.choice(bot_reply) + '   {0.author.name}'.format(message))            
+    msg = message.content.lower()
+    if any(word in msg for word in user_input):
+        await message.channel.send(random.choice(bot_reply) + '  {0.author.name}'.format(message))       
     
     if message.content.lower() == 'tgb help me':
         await message.channel.send('How can I help you?')
 
     if message.content.lower() == 'tgb cmdlist':
-        await message.channel.send(cmdlist)
+        embed = discord.Embed(
+            title="***TGB Command list***",
+            description="*tgb hi, hello, hey, ciao, yoo, hola, dude, buddy\ntgb council\ntgb core\ntgb exec\ntgb trivia\n"
+                        "tgb help me\ntgb meme\ntgb quotes\ntgb bio\ntgb bio:@<user>\ntgb add bio:<ADD_YOUR_BIO_TEXT>*",
+            colour=discord.Colour.teal()
+        )
 
+        await message.channel.send(embed= embed)
+            
     if message.content.lower() == 'tgb council':
-        await message.channel.send(council)
+        embed = discord.Embed(
+            title="***Council Members***",
+            description="***Nishant Gandhi*** >>> Chairman\n***Sarthak Khandelwal*** >>> Vice-Chairman\n***Hiteshi Gupta***  >>> Treasurer",
+            colour=discord.Colour.red()
+        )
+        await message.channel.send(embed=embed)
 
     if message.content.lower() == 'tgb core':
-        await message.channel.send(heads)
+        embed = discord.Embed(
+            title="***Head Members***",
+            description="***Saud Hashmi*** -->  Content Head\n***Riya Ahuja*** -->  Management Head\n***Ritika Maheshwari*** -->  Marketing Head\n"
+                        "***Mihir Dutta*** -->  Technical Head\n***Samriddhi Kaur*** -->  Graphics Head\n***Yash Sehgal*** -->  Junior Coordinator",
+            colour=discord.Colour.blue()
+        )
+        await message.channel.send(embed=embed)
 
     if message.content.lower() == 'tgb exec':
-        await message.channel.send(execs)
+        embed = discord.Embed(
+            title="***Executives Members***",
+            description="*Mayank Verma\nJaspreet Singh Saini\nSamarth Sharma\nAditi Mandlik\nPrateeti Mehta Jain\n"
+                        "Rajesh Nathani\nIshika Shahaney\nRaj Soni\nAnushka Jain\nTanisha Jain\nAditi Dandawate\n"
+                        "Suchismita Nanda*",
+            colour=discord.Colour.green()
+        )
+        await message.channel.send(embed=embed)
+            
+    if message.content.lower() == ("tgb contacts"):
+        embed = discord.Embed(
+            title='***Connect us on*** !',
+            description='**[Instagram](https://instagram.com/mu_acm?utm_medium=copy_link)**\n\n'
+                        '**[LinkedIn](https://www.linkedin.com/company/acm-student-chapter-medicaps/)**'
+                        '\n\n**[Website](http://medicaps.hosting.acm.org/)**',
+            colour=discord.Colour.orange()
+        )
+        embed.set_image(url='https://i.ibb.co/YWV5Bx0/Mu-ACMlogo.png')
+        await message.channel.send(embed=embed)
 
     if message.content.lower() == 'tgb trivia':
         await message.channel.send(trivia[randint(0, len(trivia)-1)])
 
     if message.content.lower() == 'tgb meme':
         await message.channel.send(embed=await pyrandmeme())
+
+    if message.content.lower() == "tgb quotes":
+        quo = quote()
+        await message.channel.send(quo)
 
     if message.content.lower() == 'tgb bio':
         await message.channel.send(tgb_bio(message))
@@ -320,9 +315,6 @@ async def on_message(message):
     if ("tgb change bio: " in message.content.lower()) and (message.content[16] != None):
         await message.channel.send(change_bio(message))
         
-    if message.content.lower() == "tgb quotes":      # THIS ONE IS ADDDED WHICH WILL RETURN A RANDOM QUOTE FROM AN API
-        quo = quote()
-        await message.channel.send(quo)
     
 async def pyrandmeme():
     pymeme = discord.Embed(title="Tech Meme requested", description="Here you go!", color=0x84d4f4)
@@ -371,13 +363,6 @@ def change_bio(message):
         df.loc[df.user == curr_user, 'bio'] = new_bio
         df.to_csv(r'bio.csv', index=False)
         return 'Bio changed!'
-
- # THIS WILL RETURN A RANDOM THOUGHT FROM THE API
-def quote():
-    response = requests.get("https://zenquotes.io/api/random")
-    json_data = json.loads(response.text)
-    quo = json_data[0]['q'] + " " + json_data[0]['a']
-    return quo
 
 keep_alive()
 client.run(TOKEN)
