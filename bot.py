@@ -1,6 +1,5 @@
 import discord
 import aiohttp
-import time
 from random import randint
 from keep_alive import keep_alive
 import pandas as pd
@@ -13,16 +12,9 @@ client = discord.Client()
 # TOKEN removed for security purposes
 TOKEN = ''
 
-user_input = ["tgb hello", "tgb hii", "tgb hi", "tgb bot", "tgb yo", "tgb yoo", "tgb hey", "tgb bro",
-              "tgb hola", "tgb what's up", "tgb dude", "tgb what's up dude", "tgb ciao", "tgb buddy"
-              ]
+user_input = ["tgb hello", "tgb hii", "tgb hi", "tgb bro", "tgb yo", "tgb yoohoo", "tgb hey", "tgb ola", "tgb wassup", "tgb dude", "tgb what up dude", "tgb ciao", "tgb buddy"]
 
-bot_reply = ["Hello!", "Hii", "CIAO", "Hey Buddy!", "Heya, how's it going?", "Hey, What's up?", "Good to see you",
-             "Great to see you", "Glad to see you", "Look who it is!", "Nice to see you again", "Hi there",
-             "Long time no see",
-             "Howdy-doody!", "Hiya!", "Howdy, howdy, howdy!", "Yoo!", "Cool dude!", "Hola", "Bonjour",
-             "What's going on?",
-             "Doing OK", "Everything Alright!"]
+bot_reply = ["Hello", "Heya", "Ciao", "Hey", "Heya, how's it going", "Hey, wassup", "Good to see you", "Great to see you", "Glad to see you", "Look who it is! It's a bird... it's a plane... it's ", "Nice to see you again", "Hi there","Long time no see","Howdy", "Hiya", "Yoohoo", "Ola", "Bonjour","What's going on","Look who it is. It's"]
 
 trivia = [
     "The Firefox logo isn’t a fox.",
@@ -228,7 +220,7 @@ trivia = [
 def quote():
     response = requests.get("https://zenquotes.io/api/random")
     json_data = json.loads(response.content)
-    quo = json_data[0]['q'] + " " + json_data[0]['a']
+    quo = "*" + json_data[0]['q'] + "*\n-**" + json_data[0]['a'] + "**"
     return quo
 
 
@@ -246,14 +238,10 @@ async def on_message(message):
     if any(word in msg for word in user_input):
         await message.channel.send(random.choice(bot_reply) + '  {0.author.name}'.format(message))
 
-    if message.content.lower() == 'tgb help me':
-        await message.channel.send('How can I help you?')
-
-    if message.content.lower() == 'tgb cmdlist':
+    if message.content.lower() == 'tgb help':
         embed = discord.Embed(
-            title="***TGB Command list***",
-            description="*tgb hi, hello, hey, ciao, yoo, hola, dude, buddy\ntgb council\ntgb core\ntgb exec\ntgb trivia\n"
-                        "tgb help me\ntgb meme\ntgb quotes\ntgb bio\ntgb bio:@<user>\ntgb add bio:<ADD_YOUR_BIO_TEXT>*",
+            title="***TGB Help/Command list***",
+            description=f"{user_input}\ntgb council\ntgb core\ntgb exec\ntgb contacts\ntgb trivia\ntgb meme\ntgb quote\ntgb bio\ntgb bio:@<user>\ntgb add bio:<ADD_YOUR_BIO_TEXT>*",
             colour=discord.Colour.teal()
         )
 
@@ -286,7 +274,7 @@ async def on_message(message):
         )
         await message.channel.send(embed=embed)
 
-    if message.content.lower() == ("tgb contacts"):
+    if message.content.lower() == "tgb contacts":
         embed = discord.Embed(
             title='***Connect us on*** !',
             description='**[Instagram](https://instagram.com/mu_acm?utm_medium=copy_link)**\n\n'
@@ -304,14 +292,12 @@ async def on_message(message):
         await message.channel.send(embed=embed)
 
     if message.content.lower() == 'tgb meme':
-
         await message.channel.send(embed=await pyrandmeme())
 
-
-    if message.content.lower() == "tgb quotes":
+    if message.content.lower() == "tgb quote":
         quo = quote()
         embed = discord.Embed(color=discord.Color.random())
-        embed.add_field(name="***Quote***  !", value=quo)
+        embed.add_field(name="Quote:", value=quo)
         embed.set_footer(text="Requested by {0.author.name}".format(message))
         await message.channel.send(embed=embed)
 
@@ -329,7 +315,6 @@ async def on_message(message):
     if ("tgb change bio: " in message.content.lower()) and (message.content[16] != None):
         await message.channel.send(change_bio(message))
 
-
 async def pyrandmeme():
     pymeme = discord.Embed(title="Tech Meme requested", description="Here you go!", color=0x84d4f4)
     async with aiohttp.ClientSession() as cs:
@@ -339,49 +324,53 @@ async def pyrandmeme():
             return pymeme
         await pyrandmeme()
 
-
 def tgb_bio(message):
     df = pd.read_csv(r'bio.csv')
     user = str(message.author)
     users = list(df['user'].values)
-    if user in users:
-        return df[df['user'] == user].bio.values[0]
-    else:
-        rtn = f"No bio found for {user}"
-        return rtn
-
-
-def tgb_bio_with_user(message, userid):
-    df = pd.read_csv(r'bio.csv')
-    user = str(message.author)
-    users = list(df['user'].values)
+    userid = message.author.id
     if user in users:
         return df[df['userid'] == userid].bio.values[0]
     else:
         rtn = f"No bio found for {user}"
         return rtn
 
+def tgb_bio_with_user(message, userid):
+    df = pd.read_csv(r'bio.csv')
+    user = str(message.author)
+    users = list(df['user'].values)
+    userid = message.author.id
+    if user in users:
+        return df[df['userid'] == userid].bio.values[0]
+    else:
+        rtn = f"No bio found for {user}"
+        return rtn
 
 def add_bio(message):
     df = pd.read_csv(r'bio.csv')
     bio = str(message.content[13:])
     user = str(message.author)
-    userid = str(message.author.id)
+    userid = message.author.id
+    users = list(df['user'].values)
+    if user in users:
+        return 'You already have a bio!'
     df.loc[len(df.index)] = [userid, user, bio]
     df.to_csv(r'bio.csv', index=False)
     return 'Bio added!'
 
-
 def change_bio(message):
     df = pd.read_csv(r'bio.csv')
     new_bio = str(message.content[16:])
-    curr_user = str(message.author)
+    user = str(message.author)
+    userid = str(message.author.id)
     users = list(df['user'].values)
-    if curr_user in users:
-        df.loc[df.user == curr_user, 'bio'] = new_bio
+    if user in users:
+        df.loc[df.userid == userid, 'bio'] = new_bio
         df.to_csv(r'bio.csv', index=False)
         return 'Bio changed!'
-
+    else:
+        rtn = f"No bio found for {user}"
+        return rtn
 
 keep_alive()
 client.run(TOKEN)
