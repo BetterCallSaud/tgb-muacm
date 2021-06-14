@@ -2,6 +2,9 @@
 import "../../Styles/main.css";
 import Introduction from "../../Components/Introduction/Introduction";
 
+// importing Logo
+import Logo from "../../assets/logo.png";
+
 function Home() {
   return (
     <div className="Home">
