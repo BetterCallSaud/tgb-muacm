@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,GAAG,AAAA,aAAa,CAAC;EACf,UAAU,EAAE,GAAG;EACf,aAAa,EAAE,GAAG;CAiBnB;;AAnBD,AAOE,GAPC,AAAA,aAAa,GAOZ,GAAG,AAAA,QAAQ,CAAC;EACZ,UAAU,EAAE,MAAM;CASnB;;AAjBH,AAUI,GAVD,AAAA,aAAa,GAOZ,GAAG,AAAA,QAAQ,GAGT,CAAC,CAAC;EACF,YAAY,EAAE,IAAI;EAClB,WAAW,EAAE,IAAI;EACjB,KAAK,EAAE,GAAG;EACV,UAAU,EAAE,kBAAkB;CAC/B",
-    "sources": [
-        "Introduction.scss"
-    ],
-    "names": [],
-    "file": "Introduction.css"
-}
