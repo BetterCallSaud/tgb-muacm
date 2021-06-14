@@ -1,0 +1,8 @@
+div.Home {
+  text-align: center;
+}
+
+div.Home > div.LinksLayer {
+  text-align: center;
+}
+/*# sourceMappingURL=Home.css.map */

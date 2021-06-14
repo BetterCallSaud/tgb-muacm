@@ -1,0 +1,16 @@
+div.Introduction {
+  margin-top: 4em;
+  margin-bottom: 2em;
+}
+
+div.Introduction > div.content {
+  text-align: center;
+}
+
+div.Introduction > div.content > p {
+  margin-right: auto;
+  margin-left: auto;
+  width: 56%;
+  text-align: justify !important;
+}
+/*# sourceMappingURL=Introduction.css.map */
