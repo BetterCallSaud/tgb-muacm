@@ -1,0 +1,23 @@
+@import url("Home/Home.css");
+@import url("variables/variables.css");
+@import url("https://fonts.googleapis.com/css2?family=Raleway&display=swap");
+body {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1400px;
+  font-family: "Raleway", sans-serif;
+}
+
+a {
+  padding-right: 3.2px;
+  padding-left: 3.2px;
+  color: #6c6cff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  color: white;
+  background-color: #6c6cff;
+}
+/*# sourceMappingURL=main.css.map */

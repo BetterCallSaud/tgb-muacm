@@ -1,0 +1,20 @@
+div.Introduction {
+  margin-top: 4em;
+  margin-bottom: 2em;
+  > h3.ContentHeadline {
+
+  }
+
+  > div.content {
+    text-align: center;
+
+    > p {
+      margin-right: auto;
+      margin-left: auto;
+      width: 56%;
+      text-align: justify !important;
+    }
+
+  }
+
+}
