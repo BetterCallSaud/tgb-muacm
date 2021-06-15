@@ -1,0 +1,10 @@
+
+# pychache
+__pycache__/
+
+# production
+build/
+
+# editor configs
+.vscode/
+.idea/

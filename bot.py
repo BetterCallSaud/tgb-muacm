@@ -6,6 +6,10 @@ import pandas as pd
 import random
 import requests
 import json
+import csv
+
+# importing utils
+import utils
 
 client = discord.Client()
 
@@ -40,6 +44,23 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    if message.content != None:
+        # the user has contributed to the chat
+        # saving the username to the command
+        user_log_filename = "user_log.csv"
+        fields = ["username"]
+        user = [str(message.author)]
+        
+        # opening data in csv file
+        with open(user_log_filename, 'w') as csvfile:
+            # creating csv writer object
+            csvwriter = csv.writer(csvfile)
+            # writing the fields
+            csvwriter.writerow(fields)
+            # writing the data rows in the file
+            csvwriter.writerows(user)
+        
+        
     if message.content.lower() == 'tgb help':
         embed = discord.Embed(
             title="***TGB Help/Command list***",
@@ -119,6 +140,14 @@ async def on_message(message):
     if ("tgb change bio: " in message.content.lower()) and (message.content[16] != None):
         await message.channel.send(change_bio(message))
 
+    if message.content.lower() == "tgb stats":
+        embed = discord.Embed(
+            title="***Most Active User***",
+            description='@{}'.format(get_server_stats()),
+            color=discord.Colour.blue()
+        )
+        await message.channel.send(embed=embed)
+
 async def pyrandmeme():
     pymeme = discord.Embed(title="Tech Meme requested", description="Here you go!", color=0x84d4f4)
     async with aiohttp.ClientSession() as cs:
@@ -176,5 +205,17 @@ def change_bio(message):
         rtn = f"No bio found for {user}"
         return rtn
 
+# feature method for getting stats of the users
+# present in the server
+def get_server_stats(message=None):
+    # checking the messages not to be None
+    # if not none, this feature will be for
+    # unique users
+    if not (message == None):
+        user_log_filename = "user_log.csv"
+        records = pd.read_csv(user_log_filename)
+        maximum_occuring_username = utils.getMaximumOccuringElement(records)
+        return maximum_occuring_username
+        
 keep_alive()
 client.run(TOKEN)
